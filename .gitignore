@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Ignore notebooks in scripts directory
+scripts/*ipynb
+
 # C extensions
 *.so
 
