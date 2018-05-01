@@ -1,6 +1,10 @@
 This is the official repository for the DIRECT Capstone project.
 
 ### Authors 
-Testing branch
+Now testing merge conflicts 
 
-Am I still on my branch?
+Sarah Alamdari 
+Wesley Beckner 
+Neal Dawson-Elli 
+Yusong Liu 
+
