@@ -5,7 +5,7 @@ __pycache__/
 
 # Ignore notebooks in scripts directory
 scripts/*ipynb
-
+scripts/wesley/*ipynb
 # C extensions
 *.so
 
