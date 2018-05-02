@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Pycharm
+.idea/
+
 # Ignore notebooks in scripts directory
 scripts/*ipynb
 scripts/wesley/*ipynb
