@@ -1,3 +1,5 @@
+import collections 
+import gensim
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
@@ -103,6 +105,38 @@ def baseline_model(top_words=1000, max_words=150, filters=32):
     model.compile(loss='binary_crossentropy', optimizer='adam',
                   metrics=['accuracy'])
     return model
+
+def read_data(data_file):
+    """
+    Takes a data file and returns a vector containing a list of words using gensim preprocessing 
+    """
+    assert type(data_file) == pd.DataFrame 
+    for i, line in enumerate (data_file):
+        yield gensim.utils.simple_preprocess (line)
+
+def build_dataset(vocab n_words):
+    """
+    Process the top n_words of the vocab 
+    vocab is the output of read_data
+    outputs a token and count for each word as well as dictionaries for forward and reverse lookup 
+    """
+    count = [['UNK', -1]] #UNK = unknown --> for all words filtered out by n_words
+    count.extend(collections.Counter(vocab).most_common(n_words - 1))
+    dictionary = dict()
+    for word, _ in count:
+        dictionary[word] = len(dictionary)
+    token = list()
+    unk_count = 0
+    for word in vocab: #
+        if word in dictionary:
+            index = dictionary[word]
+        else:
+            index = 0  # dictionary['UNK'] assigned to 0
+            unk_count += 1
+        token.append(index) #outputs a list of integers that represent words
+    count[0][1] = unk_count
+    reversed_dictionary = dict(zip(dictionary.values(), dictionary.keys())) #allows for word lookup by integer
+    return token, count, dictionary, reversed_dictionary
 
 class Benchmark:
     """
