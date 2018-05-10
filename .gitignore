@@ -9,6 +9,10 @@ __pycache__/
 # Ignore notebooks in scripts directory
 scripts/*ipynb
 scripts/wesley/*ipynb
+scripts/wesley/.tweetrc
+scripts/wesley/*bin
+scripts/wesley/.api_token.py
+scripts/wesley/.api_token
 # C extensions
 *.so
 
