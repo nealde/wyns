@@ -1,0 +1,18 @@
+GCP / Keras mileage will vary. Connection between cache and long term storage issues in keras. 
+distributed tensor flow we will probably have to write pure tensor flow ( to take full advantage of cloud ML engine, or called TF learn)
+skill point: learning distributed on cloud. (sage maker AWS version of GCP ML engine)
+
+take a look at (irreducible error) what's our ceiling rate depending on how ambiguous statements are.
+baseline what model can we compare to, (logistic regression on bag of words) think simple model for baseline
+tfidf assessment of our corpus (removes stop words, searches for bell ringers, get down to a set of words that discerning
+normal equation for logistic regression
+Releigh Quotient
+beta from L1 changes the log odds
+bag of words, stop words, stemming good enough prep for ML models in NLP
+
+Output--instea of one hot
+soft max
+
+trevor hasty and rob tribchiani two proffs at stanford "intro to stat learning" --> "elements of SL" (from stat pov)
+
+Chris bishop's ML book from cambridge (bayesian)
