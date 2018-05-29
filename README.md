@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sarahalamdari/DIRECT_capstone.svg?branch=master)](https://travis-ci.org/sarahalamdari/DIRECT_capstone)
+
 This is the official repository for the DIRECT Capstone project.
 
 ### Authors 
