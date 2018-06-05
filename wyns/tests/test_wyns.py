@@ -1,5 +1,5 @@
 from __future__ import absolute_import, division, print_function
-import core
+import wyns as core
 import unittest
 from sklearn.model_selection import train_test_split
 

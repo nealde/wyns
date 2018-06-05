@@ -36,7 +36,7 @@ Capstone project for the DIRECT course
 
 """
 
-NAME = "directcap"
+NAME = "wyns"
 MAINTAINER = "Wesley Beckner"
 MAINTAINER_EMAIL = "wab665@uw.edu"
 DESCRIPTION = description
@@ -51,5 +51,5 @@ MAJOR = _version_major
 MINOR = _version_minor
 MICRO = _version_micro
 VERSION = __version__
-PACKAGE_DATA = {'core': [pjoin('data', '*')]}
+PACKAGE_DATA = {'wyns': [pjoin('data', '*')]}
 REQUIRES = ["numpy"]

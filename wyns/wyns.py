@@ -114,7 +114,7 @@ def read_data(data_file):
     for i, line in enumerate (data_file):
         yield gensim.utils.simple_preprocess (line)
 
-def build_dataset(vocab n_words):
+def build_dataset(vocab, n_words):
     """
     Process the top n_words of the vocab 
     vocab is the output of read_data
