@@ -34,11 +34,12 @@ def load_data(data_file_name, h5File=False):
     Returns
     -------
     data : Pandas DataFrame
-    """
+    """ 
     module_path = dirname(__file__)
     if h5File:
         data = load_model(join(module_path, 'data', data_file_name))
     else:
+        assert data_file_name[-3:] == "csv" 
         with open(join(module_path, 'data', data_file_name), 'rb') as csv_file:
             data = pd.read_csv(csv_file, encoding='latin1')
     return data
@@ -51,6 +52,8 @@ def data_setup(top_words=1000, max_words=150):
     :return:
     X and Y arrays of data
     """
+    assert type(top_words) == int 
+    assert type(max_words) == int
     data = load_data("tweet_global_warming.csv")
     print("Full dataset: {}".format(data.shape[0]))
     data['existence'].fillna(value='ambiguous',
@@ -120,6 +123,8 @@ def build_dataset(vocab, n_words):
     vocab is the output of read_data
     outputs a token and count for each word as well as dictionaries for forward and reverse lookup 
     """
+    assert type(vocab) == list
+    assert type(n_words) == int
     count = [['UNK', -1]] #UNK = unknown --> for all words filtered out by n_words
     count.extend(collections.Counter(vocab).most_common(n_words - 1))
     dictionary = dict()
