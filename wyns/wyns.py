@@ -1,4 +1,4 @@
-import collections 
+import collections
 import gensim
 import numpy as np
 import pandas as pd
@@ -39,6 +39,7 @@ def load_data(data_file_name, h5File=False):
     if h5File:
         data = load_model(join(module_path, 'data', data_file_name))
     else:
+        assert data_file_name[-3:] == "csv"
         with open(join(module_path, 'data', data_file_name), 'rb') as csv_file:
             data = pd.read_csv(csv_file, encoding='latin1')
     return data
@@ -51,12 +52,16 @@ def data_setup(top_words=1000, max_words=150):
     :return:
     X and Y arrays of data
     """
+    assert type(top_words) == int
+    assert type(max_words) == int
     data = load_data("tweet_global_warming.csv")
     print("Full dataset: {}".format(data.shape[0]))
+    # replace NA's in existence with "ambiguous"
     data['existence'].fillna(value='ambiguous',
-                             inplace=True)  # replace NA's in existence with "ambiguous"
+                             inplace=True)
+    # rename so encoder doesnt get confused
     data['existence'].replace(('Y', 'N'), ('Yes', 'No'),
-                              inplace=True)  # rename so encoder doesnt get confused
+                              inplace=True)
     data = data.dropna()  # now drop NA values
     print("dataset without NaN: {}".format(data.shape[0]))
     X = data.iloc[:, 0]
@@ -87,6 +92,7 @@ def data_setup(top_words=1000, max_words=150):
     X = sequence.pad_sequences(X, maxlen=max_words)
     return X, Y
 
+
 def baseline_model(top_words=1000, max_words=150, filters=32):
     """
     baseline model developed by sarah. so ask her!
@@ -95,7 +101,7 @@ def baseline_model(top_words=1000, max_words=150, filters=32):
     """
     model = Sequential()
     model.add(Embedding(top_words + 1, filters,
-                        input_length=max_words))  # is it better to preconvert using word to vec?
+                        input_length=max_words))
     model.add(Convolution1D(filters=filters, kernel_size=3, padding='same',
                             activation='relu'))
     model.add(MaxPooling1D(pool_size=2))
@@ -106,9 +112,11 @@ def baseline_model(top_words=1000, max_words=150, filters=32):
                   metrics=['accuracy'])
     return model
 
+
 def read_data(data_file):
     """
-    Takes a data file and returns a vector containing a list of words using gensim preprocessing 
+    Takes a data file and returns a vector containing a list of words using
+    gensim preprocessing
     """
     # assert type(data_file) == pd.DataFrame()
     for i, line in enumerate (data_file):
@@ -116,27 +124,29 @@ def read_data(data_file):
 
 def build_dataset(vocab, n_words):
     """
-    Process the top n_words of the vocab 
-    vocab is the output of read_data
-    outputs a token and count for each word as well as dictionaries for forward and reverse lookup 
+    Process the top n_words of the vocab and outputs a token and count for
+    each word as well as dictionaries for forward and reverse lookup
     """
-    count = [['UNK', -1]] #UNK = unknown --> for all words filtered out by n_words
+    assert type(vocab) == list
+    assert type(n_words) == int
+    count = [['UNK', -1]]  # UNK = unknown --> words filtered out by n_words
     count.extend(collections.Counter(vocab).most_common(n_words - 1))
     dictionary = dict()
     for word, _ in count:
         dictionary[word] = len(dictionary)
     token = list()
     unk_count = 0
-    for word in vocab: #
+    for word in vocab:
         if word in dictionary:
             index = dictionary[word]
         else:
             index = 0  # dictionary['UNK'] assigned to 0
             unk_count += 1
-        token.append(index) #outputs a list of integers that represent words
+        token.append(index)  # outputs a list of integers that represent words
     count[0][1] = unk_count
-    reversed_dictionary = dict(zip(dictionary.values(), dictionary.keys())) #allows for word lookup by integer
+    reversed_dictionary = dict(zip(dictionary.values(), dictionary.keys()))
     return token, count, dictionary, reversed_dictionary
+
 
 class Benchmark:
     """
