@@ -64,7 +64,7 @@ def data_setup(top_words=1000, max_words=150):
     print("Number of unique words: {}".format(len(np.unique(np.hstack(X)))))
 
     # one hot encoding = dummy vars from categorical var
-    # Create a one-hot encoded binary matrix
+    # a one-hot encoded binary matrix
     # N, Y, Ambig
     # 1, 0, 0
     # 0, 1, 0
@@ -110,7 +110,7 @@ def read_data(data_file):
     """
     Takes a data file and returns a vector containing a list of words using gensim preprocessing 
     """
-    assert type(data_file) == pd.DataFrame 
+    # assert type(data_file) == pd.DataFrame()
     for i, line in enumerate (data_file):
         yield gensim.utils.simple_preprocess (line)
 
