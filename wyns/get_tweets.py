@@ -5,6 +5,7 @@ import sys
 import tweepy
 
 #Use to get tweets in a way that bypasses twitters weird rules#
+#Should be able to run on a build node on hyak - havent tested 
 
 # consumer key, consumer secret, access token, access secret. Unique to each person. Read Wes' API notebook for more
 API_KEY = 'IPbYoAbOUR1URWvXWeNwQNnZD'
