@@ -54,8 +54,8 @@ def data_setup(top_words=1000, max_words=150):
     Parameters
     ----------
     top_words : int
-        The maximum number of words to keep, based 
-        on word frequency in the training corpus 
+        The maximum number of words to keep, based on word frequency 
+        in the training corpus 
     max_words : int
         The maximum length of all pad sequences
 
@@ -115,13 +115,14 @@ def baseline_model(top_words=1000, max_words=150, filters=32):
     Parameters
     ----------
     top_words : int
-        The maximum number of words to keep, based on 
-        word frequency in the training corpus 
+        The maximum number of words to keep, based on  word frequency 
+        in the training corpus 
     max_words : int
         The maximum length of all pad sequences
     filters : int
         The number of output filters in the convolution
     Returns
+
     -------
     model : object
         The Keras model object used to fit training data
@@ -152,7 +153,7 @@ def read_data(data_file):
 
     Returns
     -------
-    The data will be processed using gensim preprocessing library
+   
     """
     
     assert type(data_file) == pd.DataFrame
@@ -170,24 +171,22 @@ def build_dataset(vocab, n_words):
     vocab : list
         A list of words after the tweet preprocessing 
     n_words : int
-        The maximum number of words to keep, based on 
-        word frequency in the training corpus 
+        The maximum number of words to keep, based on word frequency 
+        in the training corpus 
 
     Returns
     -------
     token : list
-        A list of integers of tokenized words based 
-        on word frequency
+        A list of integers of tokenized words based on word frequency
     count : list
-        The appearance count of each word starting 
-        from the most frequent word 
+        The appearance count of each word starting from the most 
+        frequent word 
     dictionary : dict
-        A index dictionary of words starting from 
-        the most frequent word. The dict keys are 
-        words and values are words
+        A index dictionary of words starting from the most frequent 
+        word. The dict keys are words and values are words
     reversed_dictionary : dict
-        The reversed dictionary with keys being 
-        the indexes and words being the values
+        The reversed dictionary with keys being the indexes and 
+        words being the values
     """
     assert type(vocab) == list
     assert type(n_words) == int
