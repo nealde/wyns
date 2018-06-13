@@ -34,6 +34,7 @@ def load_data(data_file_name, h5File=False):
     Returns
     -------
     data : Pandas DataFrame
+        Loaded data in a dataframe
     """
     module_path = dirname(__file__)
     if h5File:
@@ -47,10 +48,23 @@ def load_data(data_file_name, h5File=False):
 
 def data_setup(top_words=1000, max_words=150):
     """
-    preprocesses the twitter climate data. Does things like changes output
+    Preprocesses the twitter climate data. Does things like changes output
     to one hot encoding, performs word embedding/padding
-    :return:
-    X and Y arrays of data
+
+    Parameters
+    ----------
+    top_words : int
+        The maximum number of words to keep, based on word frequency 
+        in the training corpus 
+    max_words : int
+        The maximum length of all pad sequences
+
+    Returns
+    -------
+    X : numpy array
+        The embedded word vectors for all tweets
+    Y : numpy array
+        The one hot encoded labels 
     """
     assert type(top_words) == int
     assert type(max_words) == int
@@ -69,7 +83,7 @@ def data_setup(top_words=1000, max_words=150):
     print("Number of unique words: {}".format(len(np.unique(np.hstack(X)))))
 
     # one hot encoding = dummy vars from categorical var
-    # a one-hot encoded binary matrix
+    # Create a one-hot encoded binary matrix
     # N, Y, Ambig
     # 1, 0, 0
     # 0, 1, 0
@@ -95,9 +109,23 @@ def data_setup(top_words=1000, max_words=150):
 
 def baseline_model(top_words=1000, max_words=150, filters=32):
     """
-    baseline model developed by sarah. so ask her!
-    :return:
-    model object
+    Preprocesses the twitter climate data. Does things like changes output
+    to one hot encoding, performs word embedding/padding
+
+    Parameters
+    ----------
+    top_words : int
+        The maximum number of words to keep, based on  word frequency 
+        in the training corpus 
+    max_words : int
+        The maximum length of all pad sequences
+    filters : int
+        The number of output filters in the convolution
+    Returns
+
+    -------
+    model : object
+        The Keras model object used to fit training data
     """
     model = Sequential()
     model.add(Embedding(top_words + 1, filters,
@@ -117,15 +145,48 @@ def read_data(data_file):
     """
     Takes a data file and returns a vector containing a list of words using
     gensim preprocessing
+
+    Parameters
+    ----------
+    data_file : pandas.core.series.Series
+        Tweets in a Pandas DataFrame column 
+
+    Returns
+    -------
+   
     """
-    # assert type(data_file) == pd.DataFrame()
-    for i, line in enumerate (data_file):
-        yield gensim.utils.simple_preprocess (line)
+    
+    assert type(data_file) == pd.DataFrame
+    for i, line in enumerate(data_file):
+        yield gensim.utils.simple_preprocess(line)
+
 
 def build_dataset(vocab, n_words):
     """
     Process the top n_words of the vocab and outputs a token and count for
     each word as well as dictionaries for forward and reverse lookup
+    
+    Parameters
+    ----------
+    vocab : list
+        A list of words after the tweet preprocessing 
+    n_words : int
+        The maximum number of words to keep, based on word frequency 
+        in the training corpus 
+
+    Returns
+    -------
+    token : list
+        A list of integers of tokenized words based on word frequency
+    count : list
+        The appearance count of each word starting from the most 
+        frequent word 
+    dictionary : dict
+        A index dictionary of words starting from the most frequent 
+        word. The dict keys are words and values are words
+    reversed_dictionary : dict
+        The reversed dictionary with keys being the indexes and 
+        words being the values
     """
     assert type(vocab) == list
     assert type(n_words) == int
