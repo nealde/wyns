@@ -155,7 +155,7 @@ def read_data(data_file):
     -------
    
     """
-    
+
     assert type(data_file) == pd.DataFrame
     for i, line in enumerate(data_file):
         yield gensim.utils.simple_preprocess(line)
