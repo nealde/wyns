@@ -13,6 +13,7 @@ __pycache__/
 .idea/
 
 # Ignore notebooks in scripts directory
+scripts/wesley/*json
 scripts/*ipynb
 scripts/wesley/*ipynb
 scripts/wesley/.tweetrc
