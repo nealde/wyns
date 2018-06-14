@@ -31,9 +31,14 @@ mapbox_access_token = 'pk.eyJ1IjoiamFja2x1byIsImEiOiJjajNlcnh3MzEwMHZtMzNueGw3NW
 
 #df = np.random.randn(1000,3)
 #data = pd.read_csv('tweet_global_warming.csv', encoding="latin")
-data = pd.read_csv("https://www.dropbox.com/s/3x1b7glfpuwn794/tweet_global_warming.csv?dl=1", encoding="latin")
-data['existence2'] = data['existence'].fillna('unrelated')
-df1 = np.random.rand(len(data),5)
+#data = pd.read_csv("https://www.dropbox.com/s/3x1b7glfpuwn794/tweet_global_warming.csv?dl=1", encoding="latin")
+data = pd.read_csv("https://www.dropbox.com/s/xsnb1jo7egfm057/sample_prediction.csv?dl=1", encoding="latin")
+data = data.sort_values(by=['time'])
+#print(data.columns)
+
+
+data['score'] = data['positive']-data['negative']
+#df1 = np.random.rand(len(data),5)
 #print(df['existence2'].unique())
 
 layout = dict(
@@ -230,9 +235,15 @@ app.layout = html.Div(
                     id='year_slider',
                     min=0,
                     max=len(data),
-                    value=[500,4500]
-                ),
-             dcc.Checklist(
+                    value=[len(data)//3,len(data)*2//3],
+                    marks={
+                        0: data['time'].min(),
+                        len(data): data['time'].max()
+                    }
+                )]),
+        html.Div([
+
+                dcc.Checklist(
                             id='lock_selector', #keep this to lock location
                             options=[
                                 {'label': 'Lock camera', 'value': 'locked'}
@@ -277,52 +288,10 @@ TWIT_TYPES = dict(
     unrelated = '#efe98d'
 )
 
-# start the callbacks
-# Main Graph -> update
-# The below code makes a map which colors by 'existence' and hence required pre-classification
-#@app.callback(Output('main_graph', 'figure'),
-#              [Input('year_slider', 'value')],
-#             [State('lock_selector', 'values'),
-#              State('main_graph', 'relayoutData')])
-#def make_main_figure(year_slider, selector, main_graph_layout):
-#
-#    length = len(df)
-#    df2 = np.random.rand(length,2)
-#    traces = []
-#    for existence, dff in df.groupby('existence2'):
-#        length = len(dff)
-#        df2 = np.random.rand(length,2)
-#        trace = dict(
-#            type='scattermapbox',
-#            lon=df2[:,0]-122.45,
-#            lat=df2[:,1]+47.62,
-#            text = dff['tweet'],
-#    #            text=twit[0],
-#            customdata=df2[:,0],
-#            name=df2[:,0],
-#            marker=dict(
-#                size=4,
-#                opacity=0.6,
-#                color=TWIT_TYPES[existence]
-#            )
-#        )
-#        traces.append(trace)
-#
-#    if (main_graph_layout is not None and 'locked' in selector):
-#        lon = float(main_graph_layout['mapbox']['center']['lon'])
-#        lat = float(main_graph_layout['mapbox']['center']['lat'])
-#        zoom = float(main_graph_layout['mapbox']['zoom'])
-#        layout['mapbox']['center']['lon'] = lon
-#        layout['mapbox']['center']['lat'] = lat
-#        layout['mapbox']['zoom'] = zoom
-#    else:
-#        lon = -122.45,
-#        lat = 47.62
-#        zoom = 7
-#
-#    figure = dict(data=traces, layout=layout)
-#    return figure
+def filter_data(df, slider):
+    return
 
+# start the callbacks
 # Main Graph -> update
 # the below code uses a heatmap to render the
 @app.callback(Output('main_graph', 'figure'),
@@ -331,21 +300,29 @@ TWIT_TYPES = dict(
               State('main_graph', 'relayoutData')])
 def make_main_figure(year_slider, selector, main_graph_layout):
     df = data.iloc[year_slider[0]:year_slider[1]]
-    df2 = df1[year_slider[0]:year_slider[1],:]
+    cords = list(df['coordinates'])
+    lon = []
+    lat = []
+    for cord in cords:
+        l1 = float(cord.split(",")[0].split("[")[1])
+        l2 = float(cord.split(",")[1].split("]")[0])
+        lon.append(l1)
+        lat.append(l2)
+#    print(lat, lon)
 #    length = len(df)
 #    df2 = np.random.rand(length,5) # 2 locations and 3 one-hot encoded values
     traces = [dict(
         type='scattermapbox',
-        lon = df2[:,0]*50-120.3698,
-        lat = df2[:,1]*20+27.6648,
-        text = df['tweet'],
+        lon = lon,
+        lat = lat,
+        text = df['clean_text'],
     #            text=twit[0],
-        customdata=df2[:,0],
-        name=df2[:,0],
+        customdata = df['score'],
+        name = df['score'],
         marker=dict(
             size=4,
             opacity=0.8,
-            color = df2[:,3],
+            color = df['score'],
             colorbar = dict(
                 title='Belief'
             ),
@@ -373,9 +350,9 @@ def make_main_figure(year_slider, selector, main_graph_layout):
             layout['mapbox']['center']['lat'] = lat
             layout['mapbox']['zoom'] = zoom
     else:
-        lon = -122.45,
-        lat = 47.62
-        zoom = 7
+        lon=-98.4842,
+        lat=39.0119
+        zoom = 3
 
     figure = dict(data=traces, layout=layout)
     return figure
@@ -384,7 +361,8 @@ def make_main_figure(year_slider, selector, main_graph_layout):
 @app.callback(Output('year_text', 'children'),
               [Input('year_slider', 'value')])
 def update_year_text(year_slider):
-    return "{} | {}".format(year_slider[0], year_slider[1])
+    return "{} | {}".format(''.join(data['time'].iloc[year_slider[0]].split('+0000')),
+                            ''.join(data['time'].iloc[year_slider[1]].split('+0000')))
 
 # Slider / Selection -> individual graph
 @app.callback(Output('individual_graph', 'figure'),
@@ -392,12 +370,12 @@ def update_year_text(year_slider):
               Input('year_slider', 'value')])
 def make_individual_figure(main_graph_data, year_slider):
     df = data.iloc[year_slider[0]:year_slider[1]]
-    df2 = df1[year_slider[0]:year_slider[1],:]
+#    df2 = df1[year_slider[0]:year_slider[1],:]
     layout_individual = copy.deepcopy(layout)
     layout_individual['title'] = 'Histogram from index %i to %i' % (year_slider[0], year_slider[1])
     layout_individual['updatemenus'] = []
     # custom histogram code:
-    hist = np.histogram(df2[:,3], bins=10)
+    hist = np.histogram(df['score'], bins=10)
     traces = [dict(
         type='bar',
         x = hist[1][:-1],
@@ -419,7 +397,7 @@ def make_individual_figure(main_graph_data, year_slider):
 
 # Main
 if __name__ == '__main__':
-    app.run_server()
+    app.run_server(debug=True)
 #    app.server.run( threaded=True)
 
 
