@@ -32,7 +32,8 @@ mapbox_access_token = 'pk.eyJ1IjoiamFja2x1byIsImEiOiJjajNlcnh3MzEwMHZtMzNueGw3NW
 #df = np.random.randn(1000,3)
 #data = pd.read_csv('tweet_global_warming.csv', encoding="latin")
 #data = pd.read_csv("https://www.dropbox.com/s/3x1b7glfpuwn794/tweet_global_warming.csv?dl=1", encoding="latin")
-data = pd.read_csv("https://www.dropbox.com/s/xsnb1jo7egfm057/sample_prediction.csv?dl=1", encoding="latin")
+
+data = pd.read_csv("https://www.dropbox.com/s/3a31qflbppy3ob8/sample_prediction.csv?dl=1", encoding="latin")
 data = data.sort_values(by=['time'])
 #print(data.columns)
 
@@ -173,6 +174,17 @@ layout = dict(
                                     'mapbox.style': 'dark'
                                 }],
                             label='Tennessee',
+                            method='relayout'
+                        ),
+                        dict(
+                            args=[{
+                                    'mapbox.zoom': 5,
+                                    'mapbox.center.lon': '-3.4360',
+                                    'mapbox.center.lat': '55.3781',
+                                    'mapbox.bearing': 0,
+                                    'mapbox.style': 'dark'
+                                }],
+                            label='UK',
                             method='relayout'
                         )
                     ]),
