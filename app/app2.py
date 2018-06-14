@@ -192,7 +192,7 @@ app.layout = html.Div(
         html.Div(
             [
                 html.H1(
-                    'WYNS - Global Warming Sentiment',
+                    'WYNS - Global Warming Sentiment ¯\_(ツ)_/¯',
                     #color='#CCCCCC'
                     className='eight columns',
                 ),
@@ -352,21 +352,30 @@ def make_main_figure(year_slider, selector, main_graph_layout):
 
     )]
 
-    layout_cur = copy.deepcopy(layout)
-    layout_cur['updatemenus']
+
     if (main_graph_layout is not None and 'locked' in selector):
-        lon = float(main_graph_layout['mapbox']['center']['lon'])
-        lat = float(main_graph_layout['mapbox']['center']['lat'])
-        zoom = float(main_graph_layout['mapbox']['zoom'])
-        layout['mapbox']['center']['lon'] = lon
-        layout['mapbox']['center']['lat'] = lat
-        layout['mapbox']['zoom'] = zoom
+#        print(main_graph_layout)
+        try:
+            lon = float(main_graph_layout['mapbox']['center']['lon'])
+            lat = float(main_graph_layout['mapbox']['center']['lat'])
+            zoom = float(main_graph_layout['mapbox']['zoom'])
+            layout['mapbox']['center']['lon'] = lon
+            layout['mapbox']['center']['lat'] = lat
+            layout['mapbox']['zoom'] = zoom
+        except:
+            print(main_graph_layout)
+            lon = float(main_graph_layout['mapbox.center.lon'])
+            lat = float(main_graph_layout['mapbox.center.lat'])
+            zoom = float(main_graph_layout['mapbox.zoom'])
+            layout['mapbox']['center']['lon'] = lon
+            layout['mapbox']['center']['lat'] = lat
+            layout['mapbox']['zoom'] = zoom
     else:
         lon = -122.45,
         lat = 47.62
         zoom = 7
 
-    figure = dict(data=traces, layout=layout_cur)
+    figure = dict(data=traces, layout=layout)
     return figure
 
 # Slider -> year text
