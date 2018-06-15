@@ -33,7 +33,9 @@ mapbox_access_token = 'pk.eyJ1IjoiamFja2x1byIsImEiOiJjajNlcnh3MzEwMHZtMzNueGw3NW
 #data = pd.read_csv('tweet_global_warming.csv', encoding="latin")
 #data = pd.read_csv("https://www.dropbox.com/s/3x1b7glfpuwn794/tweet_global_warming.csv?dl=1", encoding="latin")
 
-data = pd.read_csv("https://www.dropbox.com/s/3a31qflbppy3ob8/sample_prediction.csv?dl=1", encoding="latin")
+#data = pd.read_csv("https://www.dropbox.com/s/3a31qflbppy3ob8/sample_prediction.csv?dl=1", encoding="latin")
+data = pd.read_csv("sample_prediction.csv", encoding="latin")
+
 #data['time'] =
 #print(data['time'])
 #print(data[])
@@ -43,6 +45,11 @@ data = pd.read_csv("https://www.dropbox.com/s/3a31qflbppy3ob8/sample_prediction.
 
 
 data['score'] = data['positive']-data['negative']
+
+data['var_mean'] = np.sqrt(data['retweets']/data['retweets'].max())*20
+sizes = data['var_mean']+4
+#sizes = 4
+
 #df1 = np.random.rand(len(data),5)
 #print(df['existence2'].unique())
 
@@ -216,7 +223,6 @@ app.layout = html.Div(
             [
                 html.H1(
                     'WYNS - Global Warming Sentiment ¯\_(ツ)_/¯',
-                    #color='#CCCCCC'
                     className='eight columns',
                 ),
             ],
@@ -224,21 +230,21 @@ app.layout = html.Div(
         ),
         html.Div(
             [
-                html.H5(
-                    '',
-                    id='well_text', #change to no. tweets selected
-                    className='two columns'
-                ),
-                html.H5(
-                    '',
-                    id='production_text', #get rid of this
-                    className='eight columns', #
-                    style={'text-align': 'center'} #
-                ),
+                #html.H5(
+                #    '',
+                #    id='well_text', #change to no. tweets selected
+                #    className='two columns'
+                #),
+                #html.H5(
+                #    '',
+                #    id='production_text', #get rid of this
+                #    className='eight columns', #
+                #    style={'text-align': 'center'} #
+                #),
                 html.H5(
                     '',
                     id='year_text', #change to years of tweets selected
-                    className='two columns',
+                    #className='two columns',
                     style={'text-align': 'right'}
                 ),
             ],
@@ -336,7 +342,7 @@ def make_main_figure(year_slider, selector, main_graph_layout):
         customdata = df['score'],
         name = df['score'],
         marker=dict(
-            size=4,
+            size=sizes,
             opacity=0.8,
             color = df['score'],
             colorbar = dict(
