@@ -34,7 +34,11 @@ mapbox_access_token = 'pk.eyJ1IjoiamFja2x1byIsImEiOiJjajNlcnh3MzEwMHZtMzNueGw3NW
 #data = pd.read_csv("https://www.dropbox.com/s/3x1b7glfpuwn794/tweet_global_warming.csv?dl=1", encoding="latin")
 
 data = pd.read_csv("https://www.dropbox.com/s/3a31qflbppy3ob8/sample_prediction.csv?dl=1", encoding="latin")
-data = data.sort_values(by=['time'])
+#data['time'] =
+#print(data['time'])
+#print(data[])
+#data['time'] = np.arange(len(data))
+#data = data.sort_values(by=['time'])
 #print(data.columns)
 
 
@@ -312,21 +316,21 @@ def filter_data(df, slider):
               State('main_graph', 'relayoutData')])
 def make_main_figure(year_slider, selector, main_graph_layout):
     df = data.iloc[year_slider[0]:year_slider[1]]
-    cords = list(df['coordinates'])
-    lon = []
-    lat = []
-    for cord in cords:
-        l1 = float(cord.split(",")[0].split("[")[1])
-        l2 = float(cord.split(",")[1].split("]")[0])
-        lon.append(l1)
-        lat.append(l2)
+#    cords = list(df['coordinates'])
+#    lon = []
+#    lat = []
+#    for cord in cords:
+#        l1 = float(cord.split(",")[0].split("[")[1])
+#        l2 = float(cord.split(",")[1].split("]")[0])
+#        lon.append(l1)
+#        lat.append(l2)
 #    print(lat, lon)
 #    length = len(df)
 #    df2 = np.random.rand(length,5) # 2 locations and 3 one-hot encoded values
     traces = [dict(
         type='scattermapbox',
-        lon = lon,
-        lat = lat,
+        lon = df['long'],
+        lat = df['lat'],
         text = df['clean_text'],
     #            text=twit[0],
         customdata = df['score'],
