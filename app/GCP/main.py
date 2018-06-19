@@ -33,8 +33,8 @@ mapbox_access_token = 'pk.eyJ1IjoiamFja2x1byIsImEiOiJjajNlcnh3MzEwMHZtMzNueGw3NW
 #data = pd.read_csv('tweet_global_warming.csv', encoding="latin")
 #data = pd.read_csv("https://www.dropbox.com/s/3x1b7glfpuwn794/tweet_global_warming.csv?dl=1", encoding="latin")
 
-#data = pd.read_csv("https://www.dropbox.com/s/3a31qflbppy3ob8/sample_prediction.csv?dl=1", encoding="latin")
-data = pd.read_csv("sample_prediction.csv", encoding="latin")
+data = pd.read_csv("https://www.dropbox.com/s/3a31qflbppy3ob8/sample_prediction.csv?dl=1", encoding="latin")
+#data = pd.read_csv("sample_prediction.csv", encoding="latin")
 
 #data['time'] =
 #print(data['time'])
