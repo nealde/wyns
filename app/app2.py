@@ -29,7 +29,7 @@ CORS(server)
 mapbox_access_token = 'pk.eyJ1IjoiamFja2x1byIsImEiOiJjajNlcnh3MzEwMHZtMzNueGw3NWw5ZXF5In0.fk8k06T96Ml9CLGgKmk81w'  # noqa: E501
 
 #df = np.random.randn(1000,3)
-data = pd.read_csv('tweet_global_warming.csv', encoding="latin")
+data = pd.read_csv('../wyns/data/tweet_global_warming.csv', encoding="latin")
 data['existence2'] = data['existence'].fillna('unrelated')
 df1 = np.random.rand(len(data),5)
 #print(df['existence2'].unique())
