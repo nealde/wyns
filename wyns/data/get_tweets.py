@@ -35,6 +35,8 @@ print("Downloading max {0} tweets".format(maxTweets))
 #ff = []
 import time
 for i in range(50):
+    api = tweepy.API(auth, wait_on_rate_limit = True,
+                 wait_on_rate_limit_notify = True)
     tweetCount = 0
     with open(fName, 'a') as f:
         while tweetCount < maxTweets:
