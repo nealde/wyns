@@ -30,7 +30,6 @@ app.css.append_css({'external_url': 'https://cdn.rawgit.com/plotly/dash-app-styl
 mapbox_access_token = 'pk.eyJ1IjoiamFja2x1byIsImEiOiJjajNlcnh3MzEwMHZtMzNueGw3NWw5ZXF5In0.fk8k06T96Ml9CLGgKmk81w'  # noqa: E501
 
 #data = pd.read_csv("https://www.dropbox.com/s/3x1b7glfpuwn794/tweet_global_warming.csv?dl=1", encoding="latin")
-#data = pd.read_csv("https://www.dropbox.com/s/3a31qflbppy3ob8/sample_prediction.csv?dl=1", encoding="latin")
 
 data = pd.read_csv("https://www.dropbox.com/s/3a31qflbppy3ob8/sample_prediction.csv?dl=1", encoding="latin")
 #data = pd.read_csv("sample_prediction.csv", encoding="latin")
