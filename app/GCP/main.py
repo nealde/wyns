@@ -1,3 +1,5 @@
+import base64
+import json
 import os
 import pickle
 import copy
@@ -12,8 +14,6 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 
-# Multi-dropdown options
-#from controls import COUNTIES, WELL_STATUSES, WELL_TYPES, WELL_COLORS
 server = Flask(__name__)
 app = dash.Dash(__name__, server=server)
 #app.scripts.config.serve_locally = True
@@ -29,29 +29,19 @@ app.css.append_css({'external_url': 'https://cdn.rawgit.com/plotly/dash-app-styl
 # Create global chart template
 mapbox_access_token = 'pk.eyJ1IjoiamFja2x1byIsImEiOiJjajNlcnh3MzEwMHZtMzNueGw3NWw5ZXF5In0.fk8k06T96Ml9CLGgKmk81w'  # noqa: E501
 
-#df = np.random.randn(1000,3)
-#data = pd.read_csv('tweet_global_warming.csv', encoding="latin")
 #data = pd.read_csv("https://www.dropbox.com/s/3x1b7glfpuwn794/tweet_global_warming.csv?dl=1", encoding="latin")
 
 data = pd.read_csv("https://www.dropbox.com/s/3a31qflbppy3ob8/sample_prediction.csv?dl=1", encoding="latin")
 #data = pd.read_csv("sample_prediction.csv", encoding="latin")
+#print (data['clean_text'])
 
-#data['time'] =
-#print(data['time'])
-#print(data[])
-#data['time'] = np.arange(len(data))
-#data = data.sort_values(by=['time'])
-#print(data.columns)
-
-
+#Change size of points 
 data['score'] = data['positive']-data['negative']
-
 data['var_mean'] = np.sqrt(data['retweets']/data['retweets'].max())*20
-sizes = data['var_mean']+4
-#sizes = 4
+sizes = data['var_mean']+4  # 4 is the smallest size a point can be 
 
-#df1 = np.random.rand(len(data),5)
-#print(df['existence2'].unique())
+#twit image
+img = base64.b64encode(open('twit.png', 'rb').read())
 
 layout = dict(
     autosize=True,
@@ -217,63 +207,69 @@ layout = dict(
 
 
 # Create app layout
-app.layout = html.Div(
-    [
-        html.Div(
-            [
+app.layout = html.Div([
+        html.Div([
                 html.H1(
                     'WYNS - Global Warming Sentiment ¯\_(ツ)_/¯',
-                    className='eight columns',
+                    #className='eight columns',
                 ),
-            ],
+                html.Br(),
+                ],
             className='row'
         ),
-        html.Div(
-            [
-                #html.H5(
-                #    '',
-                #    id='well_text', #change to no. tweets selected
-                #    className='two columns'
-                #),
-                #html.H5(
-                #    '',
-                #    id='production_text', #get rid of this
-                #    className='eight columns', #
-                #    style={'text-align': 'center'} #
-                #),
-                html.H5(
-                    '',
-                    id='year_text', #change to years of tweets selected
-                    #className='two columns',
+        html.Div([
+            html.Img(src='data:image/png;base64,{}'.format(img.decode())),
+            ],
+            style={
+                'minHeight':'100px'},
+            className='one columns'
+            ),
+        html.Div([
+            html.Div(id='tweet-text')
+            ],
+            style={
+                #'color':'blue',
+                'fontSize':18,
+                #'columnCount':2,
+                'minHeight':'100px'},
+            className='eight columns'
+            ),
+         html.Div([
+                html.P(
+                    id='year_text',
                     style={'text-align': 'right'}
                 ),
-            ],
-            className='row'
+                ],
+            className='two columns'
         ),
-        html.Div(
-            [
-                html.P('Filter by tweet date (or select range in histogram):'),  # noqa: E501
+        html.Div([
+                html.Br(),
+                html.P('Filter by Date:'),
                 dcc.RangeSlider(
                     id='year_slider',
                     min=0,
                     max=len(data),
-                    value=[len(data)//3,len(data)*2//3],
+                    value=[len(data)//10,len(data)*2//10],
                     marks={
                         0: data['time'].min(),
                         len(data): data['time'].max()
                     }
-                )]),
+                ),
+                html.Br(),
+                ],
+                className='twelve columns'
+                ),
         html.Div([
-
                 dcc.Checklist(
-                            id='lock_selector', #keep this to lock location
+                            id='lock_selector',
                             options=[
                                 {'label': 'Lock camera', 'value': 'locked'}
                             ],
                             values=[],
                         )
             ],
-            style={'margin-top': '20'}
+            style={'margin-top': '20'},
+            className='eight columns'
 
         ),
 
@@ -315,31 +311,19 @@ def filter_data(df, slider):
 
 # start the callbacks
 # Main Graph -> update
-# the below code uses a heatmap to render the
+# the below code uses a heatmap to render the data points
 @app.callback(Output('main_graph', 'figure'),
               [Input('year_slider', 'value')],
              [State('lock_selector', 'values'),
               State('main_graph', 'relayoutData')])
 def make_main_figure(year_slider, selector, main_graph_layout):
     df = data.iloc[year_slider[0]:year_slider[1]]
-#    cords = list(df['coordinates'])
-#    lon = []
-#    lat = []
-#    for cord in cords:
-#        l1 = float(cord.split(",")[0].split("[")[1])
-#        l2 = float(cord.split(",")[1].split("]")[0])
-#        lon.append(l1)
-#        lat.append(l2)
-#    print(lat, lon)
-#    length = len(df)
-#    df2 = np.random.rand(length,5) # 2 locations and 3 one-hot encoded values
     traces = [dict(
         type='scattermapbox',
         lon = df['long'],
         lat = df['lat'],
-        text = df['clean_text'],
-    #            text=twit[0],
-        customdata = df['score'],
+        #text='can customize text',
+        customdata = df['clean_text'], 
         name = df['score'],
         marker=dict(
             size=sizes,
@@ -352,7 +336,6 @@ def make_main_figure(year_slider, selector, main_graph_layout):
         ),
 
     )]
-
 
     if (main_graph_layout is not None and 'locked' in selector):
 #        print(main_graph_layout)
@@ -379,11 +362,21 @@ def make_main_figure(year_slider, selector, main_graph_layout):
     figure = dict(data=traces, layout=layout)
     return figure
 
+#Update Text on Screen 
+@app.callback(Output('tweet-text', 'children'),
+        [Input('year_slider', 'value'),
+         Input('main_graph','hoverData')])
+def update_text(year_slider,hoverData):
+    if hoverData is not None: 
+        df = data.iloc[year_slider[0]:year_slider[1]]
+        s = df[df['clean_text'] == hoverData['points'][0]['customdata']]
+        return html.P(s['clean_text'].iloc[0])
+
 # Slider -> year text
 @app.callback(Output('year_text', 'children'),
               [Input('year_slider', 'value')])
 def update_year_text(year_slider):
-    return "{} | {}".format(''.join(data['time'].iloc[year_slider[0]].split('+0000')),
+    return "Showing Tweets from {} to {}".format(''.join(data['time'].iloc[year_slider[0]].split('+0000')),
                             ''.join(data['time'].iloc[year_slider[1]].split('+0000')))
 
 # Slider / Selection -> individual graph
@@ -392,13 +385,14 @@ def update_year_text(year_slider):
               Input('year_slider', 'value')])
 def make_individual_figure(main_graph_data, year_slider):
     df = data.iloc[year_slider[0]:year_slider[1]]
-#    df2 = df1[year_slider[0]:year_slider[1],:]
+#   df2 = df1[year_slider[0]:year_slider[1],:]
     layout_individual = copy.deepcopy(layout)
     layout_individual['title'] = 'Histogram from index %i to %i' % (year_slider[0], year_slider[1])
     layout_individual['updatemenus'] = []
     # custom histogram code:
     hist = np.histogram(df['score'], bins=10)
     traces = [dict(
+        hoverinfo='none',
         type='bar',
         x = hist[1][:-1],
         y = hist[0],
