@@ -19,7 +19,7 @@ conda install -r requirements.txt
 ```
 
 ## Development 
-WYNS is the current capstone project for under development. 
+WYNS is the current capstone project for the [DIRECT](http://depts.washington.edu/uwdirect/) courses, currently under development. 
 
 
 ### Authors
