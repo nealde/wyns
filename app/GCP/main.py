@@ -40,6 +40,9 @@ data['score'] = data['positive']-data['negative']
 data['var_mean'] = np.sqrt(data['retweets']/data['retweets'].max())*20
 sizes = data['var_mean']+4  # 4 is the smallest size a point can be 
 
+num_bin = 100
+bin_width = 2/num_bin
+
 #twit image
 img = base64.b64encode(open('twit.png', 'rb').read())
 
@@ -313,11 +316,23 @@ def filter_data(df, slider):
 # Main Graph -> update
 # the below code uses a heatmap to render the data points
 @app.callback(Output('main_graph', 'figure'),
-              [Input('year_slider', 'value')],
+              [Input('year_slider', 'value'),
+               Input('individual_graph', 'selectedData')],
              [State('lock_selector', 'values'),
               State('main_graph', 'relayoutData')])
-def make_main_figure(year_slider, selector, main_graph_layout):
+def make_main_figure(year_slider, hist_select, selector, main_graph_layout):
+    ###slect first thingy in json and grab x as min
+    ###slelect last thingy in json and grab x as max
+    ####return that cheese to the filter function as [min, max]
+    ###we'll call that funciton in the main graph callback
+    ####and then business as usuall.....
     df = data.iloc[year_slider[0]:year_slider[1]]
+    if hist_select:
+        min_heat = hist_select['points'][0]['x']
+        max_heat = hist_select['points'][-1]['x'] + bin_width
+        # change this if you change bin size doood
+        dff = df[df['score'] > min_heat]
+        df = dff[dff['score'] < max_heat]
     traces = [dict(
         type='scattermapbox',
         lon = df['long'],
@@ -329,10 +344,21 @@ def make_main_figure(year_slider, selector, main_graph_layout):
             size=sizes,
             opacity=0.8,
             color = df['score'],
+            cmin=-1,
+            cmax=1,
             colorbar = dict(
                 title='Belief'
             ),
-            colorscale = [[0.0, 'rgb(165,0,38)'], [0.1111111111111111, 'rgb(215,48,39)'], [0.2222222222222222, 'rgb(244,109,67)'], [0.3333333333333333, 'rgb(253,174,97)'], [0.4444444444444444, 'rgb(254,224,144)'], [0.5555555555555556, 'rgb(224,243,248)'], [0.6666666666666666, 'rgb(171,217,233)'], [0.7777777777777778, 'rgb(116,173,209)'], [0.8888888888888888, 'rgb(69,117,180)'], [1.0, 'rgb(49,54,149)']]
+            colorscale = [[0.0, 'rgb(165,0,38)'],
+                          [0.1111111111111111, 'rgb(215,48,39)'],
+                          [0.2222222222222222, 'rgb(244,109,67)'],
+                          [0.3333333333333333, 'rgb(253,174,97)'],
+                          [0.4444444444444444, 'rgb(254,224,144)'],
+                          [0.5555555555555556, 'rgb(224,243,248)'],
+                          [0.6666666666666666, 'rgb(171,217,233)'],
+                          [0.7777777777777778, 'rgb(116,173,209)'],
+                          [0.8888888888888888, 'rgb(69,117,180)'],
+                          [1.0, 'rgb(49,54,149)']]
         ),
 
     )]
@@ -365,8 +391,9 @@ def make_main_figure(year_slider, selector, main_graph_layout):
 #Update Text on Screen 
 @app.callback(Output('tweet-text', 'children'),
         [Input('year_slider', 'value'),
+         Input('individual_graph', 'selectedData'),
          Input('main_graph','hoverData')])
-def update_text(year_slider,hoverData):
+def update_text(year_slider, hist_select, hoverData):
     if hoverData is not None: 
         df = data.iloc[year_slider[0]:year_slider[1]]
         s = df[df['clean_text'] == hoverData['points'][0]['customdata']]
@@ -390,7 +417,7 @@ def make_individual_figure(main_graph_data, year_slider):
     layout_individual['title'] = 'Histogram from index %i to %i' % (year_slider[0], year_slider[1])
     layout_individual['updatemenus'] = []
     # custom histogram code:
-    hist = np.histogram(df['score'], bins=10)
+    hist = np.histogram(df['score'], bins=num_bin)
     traces = [dict(
         hoverinfo='none',
         type='bar',
