@@ -213,9 +213,11 @@ layout = dict(
 app.layout = html.Div([
         html.Div([
                 html.H1(
-                    'WYNS - Global Warming Sentiment',
+                    'WYNS',
                     #className='eight columns',
                 ),
+                html.H4(
+                    'Use our tools to explore tweets on climate change from around the world!'),
                 html.Br(),
                 ],
             className='row'
