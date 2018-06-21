@@ -40,7 +40,7 @@ data['score'] = data['positive']-data['negative']
 data['var_mean'] = np.sqrt(data['retweets']/data['retweets'].max())*20
 sizes = data['var_mean']+4  # 4 is the smallest size a point can be 
 
-num_bin = 100
+num_bin = 50
 bin_width = 2/num_bin
 
 #twit image
@@ -213,7 +213,7 @@ layout = dict(
 app.layout = html.Div([
         html.Div([
                 html.H1(
-                    'WYNS - Global Warming Sentiment ¯\_(ツ)_/¯',
+                    'WYNS - Global Warming Sentiment',
                     #className='eight columns',
                 ),
                 html.Br(),
