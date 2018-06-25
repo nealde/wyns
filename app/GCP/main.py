@@ -35,10 +35,10 @@ data = pd.read_csv("https://www.dropbox.com/s/3a31qflbppy3ob8/sample_prediction.
 #data = pd.read_csv("sample_prediction.csv", encoding="latin")
 #print (data['clean_text'])
 
-#Change size of points 
+#Change size of points
 data['score'] = data['positive']-data['negative']
 data['var_mean'] = np.sqrt(data['retweets']/data['retweets'].max())*20
-sizes = data['var_mean']+4  # 4 is the smallest size a point can be 
+sizes = data['var_mean']+4  # 4 is the smallest size a point can be
 
 num_bin = 50
 bin_width = 2/num_bin
@@ -262,7 +262,8 @@ app.layout = html.Div([
                 ),
                 html.Br(),
                 ],
-                className='twelve columns'
+                className='twelve columns',
+                id='slider_holder'
                 ),
         html.Div([
                 dcc.Checklist(
@@ -271,7 +272,10 @@ app.layout = html.Div([
                                 {'label': 'Lock camera', 'value': 'locked'}
                             ],
                             values=[],
-                        )
+                        ),
+#             html.Button('Reload Data', id='button'),
+#            html.Div(id='hidden_div')
+
             ],
             style={'margin-top': '20'},
             className='eight columns'
@@ -314,6 +318,59 @@ TWIT_TYPES = dict(
 def filter_data(df, slider):
     return
 
+# function that reloads the data
+#@app.callback(Output('slider_holder','children'),[Input('button','n_clicks')])
+#def fetch_data(n_clicks):
+#    print(n_clicks)
+#    if n_clicks is not None:
+#        data = pd.read_csv("https://www.dropbox.com/s/3a31qflbppy3ob8/sample_prediction.csv?dl=1", encoding="latin")
+#        #data = pd.read_csv("sample_prediction.csv", encoding="latin")
+#        #print (data['clean_text'])
+#
+#        #Change size of points
+#        data['score'] = data['positive']-data['negative']
+#        data['var_mean'] = np.sqrt(data['retweets']/data['retweets'].max())*20
+#        sizes = data['var_mean']+4
+#        print(len(data))
+##    return html.Div([])
+#        return html.Div([
+#                    html.Br(),
+#                    html.P('Filter by Date:'),
+#                    dcc.RangeSlider(
+#                        id='year_slider',
+#                        min=0,
+#                        max=len(data),
+#                        value=[len(data)//10,len(data)*2//10],
+#                        marks={
+#                            0: data['time'].min(),
+#                            len(data): data['time'].max()
+#                        }
+#                    ),
+#                    html.Br(),
+#                    ],
+#                    className='twelve columns',
+#                    id='slider_holder'
+#                    )
+#    else:
+#        return html.Div([
+#                    html.Br(),
+#                    html.P('Filter by Date:'),
+#                    dcc.RangeSlider(
+#                        id='year_slider',
+#                        min=0,
+#                        max=len(data),
+#                        value=[len(data)//10,len(data)*2//10],
+#                        marks={
+#                            0: data['time'].min(),
+#                            len(data): data['time'].max()
+#                        }
+#                    ),
+#                    html.Br(),
+#                    ],
+#                    className='twelve columns',
+#                    id='slider_holder'
+#                    )
+
 # start the callbacks
 # Main Graph -> update
 # the below code uses a heatmap to render the data points
@@ -340,7 +397,7 @@ def make_main_figure(year_slider, hist_select, selector, main_graph_layout):
         lon = df['long'],
         lat = df['lat'],
         #text='can customize text',
-        customdata = df['clean_text'], 
+        customdata = df['clean_text'],
         name = df['score'],
         marker=dict(
             size=sizes,
@@ -390,16 +447,16 @@ def make_main_figure(year_slider, hist_select, selector, main_graph_layout):
     figure = dict(data=traces, layout=layout)
     return figure
 
-#Update Text on Screen 
+#Update Text on Screen
 @app.callback(Output('tweet-text', 'children'),
         [Input('year_slider', 'value'),
          Input('individual_graph', 'selectedData'),
          Input('main_graph','hoverData')])
 def update_text(year_slider, hist_select, hoverData):
-    if hoverData is not None: 
+    if hoverData is not None:
         df = data.iloc[year_slider[0]:year_slider[1]]
         s = df[df['clean_text'] == hoverData['points'][0]['customdata']]
-        return html.P(s['clean_text'].iloc[0])
+        return html.P(s['raw_tweet'].iloc[0])
 
 # Slider -> year text
 @app.callback(Output('year_text', 'children'),
