@@ -57,7 +57,7 @@ def normalize(txt, vocab=None, replace_char=' ',
     if pad_out and max_length > txt_len:
         txt = txt + replace_char * (max_length - txt_len)
     if txt.find('@') > -1:
-        for i in range(len(txt.split('@'))-1):
+        for i in range(len(txt.split('@')) - 1):
             try:
                 if str(txt.split('@')[1]).find(' ') > -1:
                     to_remove = '@' + str(txt.split('@')[1].split(' ')[0]) +\
