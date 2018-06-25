@@ -21,7 +21,7 @@ install:
 
 # a list of commands to run before the main script
 before_script:
-    - "flake8 wyns"
+    - "flake8 flake8 --ignore N802,N806,W291,E722 wyns/"
 
 # the actual commands to run
 script:
