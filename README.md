@@ -32,8 +32,8 @@ WYNS is our capstone project for the [DIRECT](http://depts.washington.edu/uwdire
 
 
 ### Authors
-Sarah Alamdari
-Wesley Beckner
-Neal Dawson-Elli
+Sarah Alamdari,
+Wesley Beckner,
+Neal Dawson-Elli,
 Yusong Liu
 
