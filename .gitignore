@@ -1,3 +1,6 @@
+# Ignore tokens 
+wyns/data/tweet.py
+
 # Byte-compiled / optimized / DLL files
 *.gz
 *.bin

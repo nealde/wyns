@@ -1,6 +1,6 @@
 import sys
 import tweepy
-from token import API_KEY, API_SECRET
+from tweet import API_KEY, API_SECRET
 
 auth = tweepy.AppAuthHandler(API_KEY, API_SECRET)
 api = tweepy.API(auth, wait_on_rate_limit=True,

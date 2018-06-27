@@ -1,17 +1,10 @@
 import sys
 import time
 import tweepy
-from token import API_KEY, API_SECRET
+from tweet import API_KEY, API_SECRET
 
 #  Use to get tweets in a way that bypasses twitters weird rules
 #  Should be able to run on a build node on hyak - havent tested
-
-#  Consumer key, consumer secret, access token, access secret.
-#  Unique to each person. Read Wes' API notebook for more
-# API_KEY='IPbYoAbOUR1URWvXWeNwQNnZD'
-# API_SECRET='goN7XnztVpn6CgkEAAxU9GOVSwbUYwjuFC0ChXdxjWBhRrYZcj'
-# access_token='506759494-rt09qdTZGlGH8WkBDd5M8Vgr6eGbZtlxQVaEH7hA'
-# access_token_secret='k6tPQuDCnqIf25Ethn6mtZ4pTAoncEufAIy8EVujP2JF2'
 
 auth = tweepy.AppAuthHandler(API_KEY, API_SECRET)
 api = tweepy.API(auth, wait_on_rate_limit=True,
