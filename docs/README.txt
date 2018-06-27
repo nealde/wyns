@@ -1,1 +1,1 @@
-![Preview](poster.pdf)
+<img src="poster.pdf"/>
