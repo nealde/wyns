@@ -1,1 +1,1 @@
-folder containing html build of documentation
+![Preview](poster.pdf)
