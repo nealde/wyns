@@ -1,6 +1,4 @@
 ### Launching App 
-```
-
 To run the app run the following in terminal:
 ```
 python main.py
